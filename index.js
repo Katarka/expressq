@@ -1,5 +1,5 @@
 import express from 'express'
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import router from "./router.js";
 import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv'
@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT
-// const db = `mongodb+srv://user:22042204Q@cluster0.qwnsk8j.mongodb.net/?retryWrites=true&w=majority`
+// const db = process.env.MONGO
 const sequelize = new Sequelize(process.env.CONNECTION_BD)
 
 const app = express()
@@ -28,8 +28,9 @@ async function startApp() {
         app.listen(PORT, () => console.log('Connection seccessfull'))
     } catch (e) {
         console.log(e)
+    } finally {
+        await sequelize.close()
     }
 }
 
 startApp()
-
