@@ -1,15 +1,14 @@
 import express from 'express'
 // import mongoose from 'mongoose'
 import router from "./router.js";
-import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv'
 import Post from './Post.js';
+import { sequelize } from './db.js';
 
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT
 // const db = process.env.MONGO
-const sequelize = new Sequelize(process.env.CONNECTION_BD)
 
 const app = express()
 
