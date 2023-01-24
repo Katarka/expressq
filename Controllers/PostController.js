@@ -1,4 +1,4 @@
-import Post from "./Post.js";
+import Post from "../Model/Post.js";
 
 class PostController {
     async create(req, res) {
@@ -26,7 +26,10 @@ class PostController {
             if (!id) {
                 req.status(400).json({ message: 'ID не указан' })
             }
-            const post = await Post.findOne({ where: { id: id } })
+            const post = await Post.findOne(
+                {
+                    where: { id: id }
+                })
             return res.json(post)
         } catch (e) {
             res.status(500).json(e)
@@ -35,15 +38,14 @@ class PostController {
 
     async update(req, res) {
         try {
-            const { id, author, title, content, picture } = req.body
-            if (!id) {
+            const { ...post } = req.body
+            if (!post.id) {
                 req.status(400).json({ message: 'ID не указан' })
             }
             const updatedPost = await Post.update(
-                { author, title, content, picture },
-                { where: { id: id } }
+                { ...post },
+                { where: { id: post.id } }
             )
-            await Post.save()
             return res.status(200).json(updatedPost)
         } catch (e) {
             res.status(500).json(e)

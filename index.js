@@ -2,7 +2,7 @@ import express from 'express'
 // import mongoose from 'mongoose'
 import router from "./router.js";
 import * as dotenv from 'dotenv'
-import Post from './Post.js';
+import Post from './Model/Post.js';
 import { sequelize } from './db.js';
 
 dotenv.config()
@@ -26,7 +26,7 @@ async function startApp() {
         // app.listen(PORT, () => console.log('Server work ' + PORT))
         await sequelize.authenticate()
         await Post.sync()
-        app.listen(PORT, () => console.log('Connection seccessfull'))
+        app.listen(PORT, () => console.log('Connection successful'))
     } catch (e) {
         console.log(e)
     } finally {
