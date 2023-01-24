@@ -3,6 +3,7 @@ import express from 'express'
 import router from "./router.js";
 import { Sequelize } from 'sequelize';
 import * as dotenv from 'dotenv'
+import Post from './Post.js';
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ async function startApp() {
         // await mongoose.connect(db)
         // app.listen(PORT, () => console.log('Server work ' + PORT))
         await sequelize.authenticate()
+        await Post.sync()
         app.listen(PORT, () => console.log('Connection seccessfull'))
     } catch (e) {
         console.log(e)
@@ -34,3 +36,5 @@ async function startApp() {
 }
 
 startApp()
+
+export default sequelize
