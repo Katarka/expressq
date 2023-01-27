@@ -11,12 +11,9 @@
 // export default mongoose.model('Post', Post)
 
 //Схема Postgres
-import { DataTypes, Sequelize } from "sequelize";
-import * as dotenv from 'dotenv'
+import { DataTypes } from "sequelize";
+import { sequelize } from "../db.js";
 
-dotenv.config()
-
-const sequelize = new Sequelize(process.env.CONNECTION_BD)
 const Post = sequelize.define('Post', {
     author: { type: DataTypes.STRING, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
