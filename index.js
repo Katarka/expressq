@@ -4,6 +4,7 @@ import router from "./router.js";
 import * as dotenv from 'dotenv'
 import Post from './Model/Post.js';
 import { sequelize } from './db.js';
+import { useSofa } from 'sofa-api';
 
 dotenv.config()
 
