@@ -4,7 +4,8 @@ import router from "./router.js";
 import * as dotenv from 'dotenv'
 import Post from './Model/Post.js';
 import { sequelize } from './db.js';
-import {ApolloServer, gql} from "apollo-server-express";
+import { server } from './Schema/Graphql.js';
+
 
 dotenv.config()
 
@@ -20,37 +21,6 @@ app.get('/', (req, res) => {
     res.status(200).json('Server work')
 })
 
-const typeDefs = gql`
-    type Query {
-        Posts: [Post]
-        Post(id: ID!): Post
-    }
-    type Post {
-        author: String!,
-        title: String!,
-        content: String!,
-        picture: String
-    }
-`
-
-const resolvers = {
-    Query: {
-        Posts() {
-            return Post.findAll()
-        },
-        Post(_, {id}){
-            return Post.findOne({
-                where: { id: id }
-            })
-        }
-    }
-}
-
-const server = new ApolloServer({
-    typeDefs,
-    resolvers
-})
-
 async function startApp() {
     try {
         // await mongoose.set('strictQuery', false)
@@ -62,10 +32,8 @@ async function startApp() {
         server.applyMiddleware({app})
         app.listen(PORT, () => console.log('Connection successful'))
     } catch (e) {
-        console.log(e)}
-    // } finally {
-    //     await sequelize.close()
-    // }
+        console.log(e)
+    } 
 }
 
 startApp()
