@@ -1,10 +1,14 @@
 import express from 'express'
 // import mongoose from 'mongoose'
-import router from "./router.js";
+import routerPost from "./router/routerPost.js";
 import * as dotenv from 'dotenv'
 import Post from './Model/Post.js';
+import Gallery from "./Model/Gallery.js";
 import { sequelize } from './db.js';
 import { server } from './Schema/Graphql.js';
+import fileupload from 'express-fileupload'
+import routerGallery from "./router/routerGallery.js";
+
 
 
 dotenv.config()
@@ -15,7 +19,10 @@ const PORT = process.env.SERVER_PORT
 const app = express()
 
 app.use(express.json())
-app.use('/api', router)
+app.use(express.static('static/post'))
+app.use(express.static('static/gallery'))
+app.use(fileupload({}))
+app.use('/api', routerPost, routerGallery)
 
 app.get('/', (req, res) => {
     res.status(200).json('Server work')
@@ -28,6 +35,7 @@ async function startApp() {
         // app.listen(PORT, () => console.log('Server work ' + PORT))
         await sequelize.authenticate()
         await Post.sync()
+        await Gallery.sync()
         await server.start()
         server.applyMiddleware({app})
         app.listen(PORT, () => console.log('Connection successful'))
