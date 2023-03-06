@@ -44,14 +44,13 @@ app.post('/feedback', (req, res) => {
     }
     mailer(message)
     order = req.body
-    res.redirect('/feedback')
+    res.redirect(301, 'http://127.0.0.1:5173/')
 })
 
-app.get('/feedback', (req, res) => {
-    if(typeof order !== 'object') return res.sendFile(__dirname + '/index.html')
-    res.send('Task upload!')
-    order = undefined
-})
+// app.get('/feedback', (req, res) => {
+//     if(typeof order !== 'object') return res.redirect(301, 'http://127.0.0.1:5173/')
+//     order = undefined
+// })
 
 async function startApp() {
     try {
