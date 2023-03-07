@@ -8,14 +8,13 @@ import { server } from './Schema/Graphql.js';
 import fileupload from 'express-fileupload'
 import routerGallery from "./router/routerGallery.js";
 import bodyParser from 'body-parser'
-import mailer from './nodemailer.js'
-import smtp from './config.js';
+import MailerRouter from './Mailer/MailerRouter.js';
 import cors from 'cors'
 
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT
-const whitelist = ['http://127.0.0.1:5173']
+const whitelist = ['http://127.0.0.1:5173', 'http://localhost:5000']
 const corsOptions = {
     origin: (origin, callback) => {
         if(whitelist.indexOf(origin) !== -1 || !origin){
@@ -33,22 +32,8 @@ app.use(express.static('static/post'))
 app.use(express.static('static/gallery'))
 app.use(fileupload({}))
 app.use('/api', routerPost, routerGallery)
-
+app.use('/', cors(corsOptions), MailerRouter)
 app.use(bodyParser.urlencoded({extended: false}))
-
-app.post('/feedback', cors(corsOptions), (req, res, next) => {
-    if(!req.body.name || !req.body.phone) return res.status(400)
-    const message = {
-        to: smtp.to,
-        subject: 'Task',
-        text: '',
-        html: `<h3>New task!</h3>
-        <b>Имя:</b> ${req.body.name} </br>
-        <b>Телефон:</b> ${req.body.phone}`
-    }
-    mailer(message)
-    res.redirect(301, 'http://127.0.0.1:5173/')
-})
 
 app.get('/', (req, res) => {
     res.status(200).json('Server work')
