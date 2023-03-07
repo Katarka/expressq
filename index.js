@@ -1,14 +1,16 @@
 import express from 'express'
-import routerPost from "./router/routerPost.js";
 import * as dotenv from 'dotenv'
 import Post from './Model/Post.js';
 import Gallery from "./Model/Gallery.js";
 import { sequelize } from './db.js';
 import { server } from './Schema/Graphql.js';
 import fileupload from 'express-fileupload'
-import routerGallery from "./router/routerGallery.js";
+
+import GalleryRouter from "./router/GalleryRouter.js";
+import PostRouter from "./router/PostRouter.js";
+import MailerRouter from './router/MailerRouter.js';
+
 import bodyParser from 'body-parser'
-import MailerRouter from './Mailer/MailerRouter.js';
 import cors from 'cors'
 
 dotenv.config()
@@ -31,7 +33,7 @@ app.use(express.json())
 app.use(express.static('static/post'))
 app.use(express.static('static/gallery'))
 app.use(fileupload({}))
-app.use('/api', routerPost, routerGallery)
+app.use('/api', PostRouter, GalleryRouter)
 app.use('/', cors(corsOptions), MailerRouter)
 app.use(bodyParser.urlencoded({extended: false}))
 

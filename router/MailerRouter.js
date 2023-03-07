@@ -1,5 +1,5 @@
 import { Router } from "express";
-import MailerController from "./MailerController.js";
+import MailerController from "../Controllers/MailerController.js";
 
 const MailerRouter = new Router()
 
