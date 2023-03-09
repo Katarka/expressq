@@ -2,6 +2,7 @@ import express from 'express'
 import * as dotenv from 'dotenv'
 import Post from './Model/Post.js';
 import Gallery from "./Model/Gallery.js";
+import Samples from './Model/Samples.js';
 import { sequelize } from './db.js';
 import { server } from './Schema/Graphql.js';
 import fileupload from 'express-fileupload'
@@ -9,6 +10,7 @@ import fileupload from 'express-fileupload'
 import GalleryRouter from "./router/GalleryRouter.js";
 import PostRouter from "./router/PostRouter.js";
 import MailerRouter from './router/MailerRouter.js';
+import SamplesRouter from './router/SamplesRouter.js';
 
 import bodyParser from 'body-parser'
 import cors from 'cors'
@@ -25,7 +27,7 @@ app.use(express.json())
 app.use(express.static('static/post'))
 app.use(express.static('static/gallery'))
 app.use(fileupload({}))
-app.use('/api', PostRouter, GalleryRouter)
+app.use('/api', PostRouter, GalleryRouter, SamplesRouter)
 app.use('/', cors(corsOptions), MailerRouter)
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -38,6 +40,7 @@ async function startApp() {
         await sequelize.authenticate()
         await Post.sync()
         await Gallery.sync()
+        await Samples.sync()
         await server.start()
         server.applyMiddleware({app})
         app.listen(PORT, () => console.log('Connection successful'))
