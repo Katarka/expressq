@@ -1,6 +1,7 @@
 import {ApolloServer, gql} from "apollo-server-express";
 import Post from "../Model/Post.js";
 import Gallery from "../Model/Gallery.js";
+import Samples from "../Model/Samples.js";
 
 const typeDefs = gql`
     type Query {
@@ -8,6 +9,9 @@ const typeDefs = gql`
         Post(id: ID!): Post
         Galleries: [Gallery]
         Gallery(id: ID!): Gallery
+        Samples: [Samples]
+        Sample(id: ID!): Samples
+        SampleGroup(group: String): [Samples]
     }
     type Post {
         author: String!,
@@ -18,6 +22,11 @@ const typeDefs = gql`
     type Gallery {
         name: String!,
         picture: String!
+    }
+    type Samples {
+        name: String!,
+        group: String!,
+        picture: String
     }
 `
 
@@ -38,11 +47,34 @@ const resolvers = {
             return Gallery.findOne({
                 where: { id: id }
             })
+        },
+        Samples(){
+            return Samples.findAll()
+        },
+        Sample(_, {id}){
+            return Samples.findOne({
+                where: { id: id }
+            })
+        },
+        SampleGroup(_, {group}){
+            return Samples.findAll({
+                where: { group: group }
+            })
         }
     }
 }
 
 export const server = new ApolloServer({
+    introspection: true,
     typeDefs,
-    resolvers
+    resolvers,
+    formatError: error => {
+        return error
+    },
+    context: ({ req, res }) => {
+        return {
+            req,
+            res
+        }
+    }
 })

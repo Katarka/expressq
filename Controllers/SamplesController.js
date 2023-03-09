@@ -3,7 +3,7 @@ import SamplesService from "../Services/SamplesService.js"
 class PostController {
     async create(req, res) {
         try {
-            const createdSamples = await SamplesService.create(req.body)
+            const createdSamples = await SamplesService.create(req.body, req.files.picture)
             res.json(createdSamples)
         } catch (e) {
             res.status(500).json(e)

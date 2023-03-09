@@ -20,15 +20,15 @@ dotenv.config()
 
 const PORT = process.env.SERVER_PORT
 
-
 const app = express()
 
 app.use(express.json())
 app.use(express.static('static/post'))
 app.use(express.static('static/gallery'))
+app.use(express.static('static/samples'))
 app.use(fileupload({}))
 app.use('/api', PostRouter, GalleryRouter, SamplesRouter)
-app.use('/', cors(corsOptions), MailerRouter)
+app.use('/', MailerRouter) //cors(corsOptions)
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.get('/', (req, res) => {
@@ -42,7 +42,7 @@ async function startApp() {
         await Gallery.sync()
         await Samples.sync()
         await server.start()
-        server.applyMiddleware({app})
+        server.applyMiddleware({ app, path: "/api/graphql" })
         app.listen(PORT, () => console.log('Connection successful'))
     } catch (e) {
         console.log(e)

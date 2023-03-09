@@ -1,15 +1,16 @@
 import Samples from "../Model/Samples.js";
+import fileServiceSamples from "./fileServiceSamples.js";
 
 class SamplesService {
-    async create(post) {
-        // const fileName = fileService.saveFile(picture)
-        const createdSamples = await Samples.create({ ...post })
+    async create(samples, picture) {
+        const fileName = fileServiceSamples.saveFile(picture)
+        const createdSamples = await Samples.create({ ...samples, picture: fileName })
         return createdSamples
     }
 
     async getAll() {
-        const posts = await Samples.findAll()
-        return posts
+        const samples = await Samples.findAll()
+        return samples
     }
 
     async getOne(id) {
@@ -47,9 +48,10 @@ class SamplesService {
         if (!id) {
             throw new Error('ID не указан')
         }
-        const samples = await Samples.destroy({ where: { id: id } })
+        const samples = await Samples.destroy(
+            { where: { id: id } }
+        )
         return samples
-
     }
 }
 

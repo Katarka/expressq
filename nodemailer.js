@@ -17,7 +17,7 @@ let transporter = nodemailer.createTransport({
 const mailer = message => {
     transporter.sendMail(message, (err, info) => {
         if(err) return console.log(err)
-        console.log('Email complite:', info)
+        console.log('Email complete:', info)
     })
 }
 
