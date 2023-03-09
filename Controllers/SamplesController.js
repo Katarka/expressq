@@ -30,7 +30,7 @@ class PostController {
 
     async getGroup(req, res) {
         try{
-            const samples = await SamplesService.getGrout(req.params.group)
+            const samples = await SamplesService.getGroup(req.params.group)
             return res.json(samples)
         } catch (e) {
             res.status(500).json(e.message)

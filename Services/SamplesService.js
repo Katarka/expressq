@@ -22,11 +22,11 @@ class SamplesService {
         return samples
     }
 
-    async getGrout(group) {
+    async getGroup(group) {
         if (!group) {
             throw new Error('Группа не указана')
         }
-        const samples = await Samples.findOne({
+        const samples = await Samples.findAll({
             where: { group: group }
         })
         return samples
