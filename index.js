@@ -15,12 +15,23 @@ import SamplesRouter from './router/SamplesRouter.js';
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import corsOptions from './Cors/CorsOptions.js';
+import { createAgent } from '@forestadmin/agent';
+import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
 
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT
 
 const app = express()
+
+createAgent({
+    authSecret: process.env.FOREST_AUTH_SECRET,
+    envSecret: process.env.FOREST_ENV_SECRET,
+    isProduction: process.env.NODE_ENV === 'production'
+})
+    .addDataSource(createSequelizeDataSource(sequelize))
+    .mountOnExpress(app)
+    .start()
 
 app.use(express.json())
 app.use(express.static('static/post'))
@@ -29,11 +40,13 @@ app.use(express.static('static/samples'))
 app.use(fileupload({}))
 app.use('/api', PostRouter, GalleryRouter, SamplesRouter)
 app.use('/', MailerRouter) //cors(corsOptions)
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
     res.status(200).json('Server work')
 })
+
+
 
 async function startApp() {
     try {
@@ -46,7 +59,7 @@ async function startApp() {
         app.listen(PORT, () => console.log('Connection successful'))
     } catch (e) {
         console.log(e)
-    } 
+    }
 }
 
 startApp()
