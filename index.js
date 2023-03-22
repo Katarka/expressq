@@ -52,7 +52,7 @@ async function startApp() {
     try {
         await sequelize.authenticate()
         await Post.sync()
-        await Gallery.sync()
+        await Gallery.sync({alter: true})
         await Samples.sync()
         await server.start()
         server.applyMiddleware({ app, path: "/api/graphql" })
