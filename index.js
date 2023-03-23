@@ -17,6 +17,9 @@ import cors from 'cors'
 import corsOptions from './Cors/CorsOptions.js';
 import { createAgent } from '@forestadmin/agent';
 import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
+import serve from 'express-static'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url';
 
 dotenv.config()
 
@@ -33,8 +36,10 @@ createAgent({
     .mountOnExpress(app)
     .start()
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 app.use(express.json())
-app.use(express.static('static/post'))
+app.use(serve(__dirname + '/static'))
 app.use(express.static('static/gallery'))
 app.use(express.static('static/samples'))
 app.use(fileupload({}))
@@ -42,17 +47,16 @@ app.use('/api', PostRouter, GalleryRouter, SamplesRouter)
 app.use('/', MailerRouter) //cors(corsOptions)
 app.use(bodyParser.urlencoded({ extended: false }))
 
+
 app.get('/', (req, res) => {
     res.status(200).json('Server work')
 })
-
-
 
 async function startApp() {
     try {
         await sequelize.authenticate()
         await Post.sync()
-        await Gallery.sync({alter: true})
+        await Gallery.sync({ alter: true })
         await Samples.sync()
         await server.start()
         server.applyMiddleware({ app, path: "/api/graphql" })
