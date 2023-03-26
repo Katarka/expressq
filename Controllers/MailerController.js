@@ -1,5 +1,5 @@
-import smtp from "../config.js"
-import mailer from "../nodemailer.js"
+import smtp from "../Mailer/config.js"
+import mailer from "../Mailer/nodemailer.js"
 
 class MailerController {
     async create(req, res) {

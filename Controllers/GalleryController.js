@@ -1,6 +1,5 @@
 import GalleryService from "../Services/GalleryService.js";
 
-
 class GalleryController {
     async create(req, res) {
         try {

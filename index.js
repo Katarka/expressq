@@ -11,12 +11,16 @@ import GalleryRouter from "./router/GalleryRouter.js";
 import PostRouter from "./router/PostRouter.js";
 import MailerRouter from './router/MailerRouter.js';
 import SamplesRouter from './router/SamplesRouter.js';
+import authRouter from "./router/authRouter.js";
 
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import corsOptions from './Cors/CorsOptions.js';
 import { createAgent } from '@forestadmin/agent';
 import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
+import User from "./Model/User.js";
+import Role from "./Model/Role.js";
+
 
 dotenv.config()
 
@@ -40,6 +44,7 @@ app.use(express.static('static/samples'))
 app.use(fileupload({}))
 app.use('/api', PostRouter, GalleryRouter, SamplesRouter)
 app.use('/', MailerRouter) //cors(corsOptions)
+app.use('/auth', authRouter)
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
@@ -52,8 +57,10 @@ async function startApp() {
     try {
         await sequelize.authenticate()
         await Post.sync()
-        await Gallery.sync({alter: true})
+        await Gallery.sync()
         await Samples.sync()
+        await User.sync()
+        await Role.sync()
         await server.start()
         server.applyMiddleware({ app, path: "/api/graphql" })
         app.listen(PORT, () => console.log('Connection successful'))
