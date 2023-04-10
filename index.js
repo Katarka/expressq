@@ -21,7 +21,6 @@ import { createSequelizeDataSource } from '@forestadmin/datasource-sequelize';
 import User from "./Model/User.js";
 import Role from "./Model/Role.js";
 
-
 dotenv.config()
 
 const PORT = process.env.SERVER_PORT
@@ -36,6 +35,8 @@ createAgent({
     .addDataSource(createSequelizeDataSource(sequelize))
     .mountOnExpress(app)
     .start()
+
+
 
 app.use(express.json())
 app.use(express.static('static/post'))
@@ -62,6 +63,7 @@ async function startApp() {
         await User.sync()
         await Role.sync()
         await server.start()
+        await ChatGPT()
         server.applyMiddleware({ app, path: "/api/graphql" })
         app.listen(PORT, () => console.log('Connection successful'))
     } catch (e) {

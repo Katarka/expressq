@@ -3,29 +3,35 @@ import * as dotenv from "dotenv";
 
 dotenv.config()
 
-const roleMiddleware = (roles) => {
-    return (req, res, next) => {
-        if (req.method === 'OPTIONS') {
+const secret = 'SECRET_KEY'
+
+function roleMiddleware (roles) {
+    return function (req, res, next) {
+        if (req.method === "OPTIONS") {
             next()
         }
+
         try {
             const token = req.headers.authorization.split(' ')[1]
             if (!token) {
-                return res.status(403).json({message: 'Пользователь не авторизован'})
+                return res.status(403).json({message: "Пользователь не авторизован"})
             }
-            const {roles: userRoles} = jwt.verify(token, process.env.SECRET)
+            const {roles: userRoles} = jwt.verify(token, secret)
             let hasRole = false
-            userRoles.forEach(role => {
-                if (roles.includes(role)) {
+            Array.from(userRoles).forEach(() => {
+                if (roles.includes(userRoles)) {
                     hasRole = true
-                }
+                } console.log(roles, userRoles)
             })
-            if(!hasRole){
-                return res.status(403).json({message: 'Нет доступа'})
+
+            if (!hasRole) {
+                console.log(hasRole)
+                return res.status(403).json({message: "У вас нет доступа"})
             }
-            next()
+            next();
         } catch (e) {
-            return res.status(403).json({message: 'Ошибка'})
+            console.log(e)
+            return res.status(403).json({message: "Пользователь не авторизован"})
         }
     }
 }
